@@ -1,0 +1,12 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home2/hg3ads37/savanadist.com.br/
+    # Remove as pastas das LPs antes de recopiar (evita aninhamento e limpa arquivos antigos)
+    - /bin/rm -rf "$DEPLOYPATH/assets" "$DEPLOYPATH/caminhao" "$DEPLOYPATH/caminhonetes" "$DEPLOYPATH/maquinas-agricolas"
+    # Copia o hub e cada LP para a raiz do domínio
+    - /bin/cp -f index.html "$DEPLOYPATH"
+    - /bin/cp -Rf assets "$DEPLOYPATH"
+    - /bin/cp -Rf caminhao "$DEPLOYPATH"
+    - /bin/cp -Rf caminhonetes "$DEPLOYPATH"
+    - /bin/cp -Rf maquinas-agricolas "$DEPLOYPATH"
