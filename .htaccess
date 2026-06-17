@@ -1,0 +1,76 @@
+# ==========================================================================
+# Savana Landing Pages — performance & cache (Apache / HostGator)
+# Aplica-se à raiz do domínio e a todas as subpastas (caminhao, caminhonetes,
+# maquinas-agricolas).
+# ==========================================================================
+
+# --- Compressão -----------------------------------------------------------
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml \
+    application/javascript application/x-javascript application/json \
+    application/xml application/rss+xml image/svg+xml application/ld+json \
+    application/manifest+json font/woff2
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml \
+    application/javascript application/x-javascript application/json \
+    application/xml application/rss+xml image/svg+xml application/ld+json \
+    application/manifest+json font/woff2
+</IfModule>
+
+# --- Cache de longo prazo para estáticos (com hash/imutáveis) -------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Imagens
+  ExpiresByType image/png                "access plus 1 year"
+  ExpiresByType image/jpeg               "access plus 1 year"
+  ExpiresByType image/gif                "access plus 1 year"
+  ExpiresByType image/webp               "access plus 1 year"
+  ExpiresByType image/avif               "access plus 1 year"
+  ExpiresByType image/svg+xml            "access plus 1 year"
+  ExpiresByType image/x-icon             "access plus 1 year"
+
+  # Fontes
+  ExpiresByType font/woff2               "access plus 1 year"
+  ExpiresByType font/woff                "access plus 1 year"
+
+  # CSS / JS
+  ExpiresByType text/css                 "access plus 1 year"
+  ExpiresByType application/javascript   "access plus 1 year"
+
+  # HTML — sempre revalida (conteúdo pode mudar a cada deploy)
+  ExpiresByType text/html                "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Imutáveis: imagens, fontes, css, js
+  <FilesMatch "\.(png|jpe?g|gif|webp|avif|svg|ico|woff2?|css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # HTML não é cacheado de forma agressiva
+  <FilesMatch "\.html?$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # Headers de segurança básicos
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# --- Tipos MIME corretos (caso o servidor não envie) ----------------------
+<IfModule mod_mime.c>
+  AddType application/ld+json   .jsonld
+  AddType image/webp            .webp
+  AddType image/avif            .avif
+  AddType font/woff2            .woff2
+</IfModule>
+
+# --- Páginas de erro / fallback de barra final ----------------------------
+# Permite acessar /caminhao e /caminhao/ servindo o index.html
+<IfModule mod_dir.c>
+  DirectoryIndex index.html
+</IfModule>

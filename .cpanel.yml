@@ -6,6 +6,7 @@ deployment:
     - /bin/rm -rf "$DEPLOYPATH/assets" "$DEPLOYPATH/caminhao" "$DEPLOYPATH/caminhonetes" "$DEPLOYPATH/maquinas-agricolas"
     # Copia o hub e cada LP para a raiz do domínio
     - /bin/cp -f index.html "$DEPLOYPATH"
+    - /bin/cp -f .htaccess "$DEPLOYPATH"
     - /bin/cp -Rf assets "$DEPLOYPATH"
     - /bin/cp -Rf caminhao "$DEPLOYPATH"
     - /bin/cp -Rf caminhonetes "$DEPLOYPATH"
